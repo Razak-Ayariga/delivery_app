@@ -94,5 +94,16 @@ export class OrderedMenuService implements OrderedMenuInterface {
         createOrderedMenus.push(createdOrderMenu);
        }
        return createOrderedMenus;
-  }
+  };
+
+  // find ordered menu by order id
+  async findOrderedMenu(order_id: number): Promise<OrderedMenuDto[]>{
+    try {
+      const orderedMenus: any = await this.orderedMenuRepository.find({where:{order_id}});
+      return orderedMenus;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }

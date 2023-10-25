@@ -19,7 +19,9 @@ export class OrderService implements OrderInterface{
             if(!orders){
                 throw new NotFoundException("No orders found!");
             }
-
+            for(const order of orders){
+                order.ordered_menus = await this.orderedMenuService.findOrderedMenu(order.id);
+            }
             return orders;
         } catch (error) {
             throw error;
@@ -32,6 +34,7 @@ export class OrderService implements OrderInterface{
           if(!order){
             throw new NotFoundException("Order nod found!");
           }
+          order.ordered_menus = await this.orderedMenuService.findOrderedMenu(order.id)
           return order;
        } catch (error) {
          throw error;
