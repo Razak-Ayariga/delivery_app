@@ -9,13 +9,13 @@ import { OrderedMenuService } from "./orderedMenu.service";
 @Injectable()
 export class OrderService implements OrderInterface{
     constructor(
-        @InjectRepository(Order) private OrderRepository: Repository<Order>,
+        @InjectRepository(Order) private orderRepository: Repository<Order>,
         private readonly orderedMenuService: OrderedMenuService
     ){}
 
     async findAll(): Promise<OrderDto[]> {
         try {
-            const orders: any = await this.OrderRepository.find();
+            const orders: any = await this.orderRepository.find();
             if(!orders){
                 throw new NotFoundException("No orders found!");
             }
@@ -30,9 +30,9 @@ export class OrderService implements OrderInterface{
 
     async findOne(id: number): Promise<OrderDto> {
        try {
-          const order: any = await this.OrderRepository.findOne({where: {id}});
+          const order: any = await this.orderRepository.findOne({where: {id}});
           if(!order){
-            throw new NotFoundException("Order nod found!");
+            throw new NotFoundException("Order not found!");
           }
           order.ordered_menus = await this.orderedMenuService.findOrderedMenu(order.id)
           return order;
@@ -43,16 +43,16 @@ export class OrderService implements OrderInterface{
 
     async create(orderDto: OrderDto): Promise<OrderDto> {
        try {
-           const order: any = this.OrderRepository.create(orderDto);
-            const createOrder = await this.OrderRepository.save(order);
+           const order: any = this.orderRepository.create(orderDto);
+            const createOrder = await this.orderRepository.save(order);
 
            let orderedMenu = [];
            if(orderDto.ordered_menus){
             orderedMenu = await this.orderedMenuService.createMenuItems(
                 orderDto.ordered_menus, createOrder.id
             )
-            createOrder.ordered_menus = orderedMenu;
-           }
+        }
+        createOrder.ordered_menus = orderedMenu;
 
            return createOrder;
        } catch (error) {
@@ -62,13 +62,13 @@ export class OrderService implements OrderInterface{
 
     async update(orderDto: OrderDto, id: number): Promise<OrderDto> {
         try {
-            const existingOrder: any = await this.OrderRepository.findOne({where: {id}});
+            const existingOrder: any = await this.orderRepository.findOne({where: {id}});
             if(!existingOrder){
                 throw new NotFoundException("Order not found!");
             }
-            const updateOrder = this.OrderRepository.merge(existingOrder, orderDto)
-            const updatedOrder = await this.OrderRepository.save(updateOrder)
-            return;
+            const updateOrder = this.orderRepository.merge(existingOrder, orderDto)
+            const updatedOrder = await this.orderRepository.save(updateOrder)
+            return updateOrder[0];
         } catch (error) {
             throw error;
         }
@@ -76,14 +76,14 @@ export class OrderService implements OrderInterface{
 
     async delete(id: number): Promise<OrderDto> {
         try {
-            const order: any = await this.OrderRepository.findOne({where:{id}});
+            const order: any = await this.orderRepository.findOne({where:{id}});
             if(!order){
               throw new NotFoundException("Order not found!");
             }
-            const deletedOrder = await this.OrderRepository.remove(order)
+            const deletedOrder = await this.orderRepository.remove(order)
             return;
         } catch (error) {
-            
+            throw error;
         }
     };
 
