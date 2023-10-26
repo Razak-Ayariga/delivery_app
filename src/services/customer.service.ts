@@ -32,7 +32,7 @@ export class CustomerService implements CustomerInterface {
 
     async create(customerDto: CustomerDto): Promise<CustomerDto> {
         try {
-            const existingCustomer = await this.customerRepository.findOne({where: {email:customerDto.email }});
+            const existingCustomer: any = await this.customerRepository.findOne({where: {email:customerDto.email }});
             if(existingCustomer){
                 throw new ConflictException(" User already exists");
             }
@@ -62,6 +62,8 @@ export class CustomerService implements CustomerInterface {
     async delete(id: number): Promise<CustomerDto> {
         try {
             const customer: any = await this.customerRepository.findOne({where: {id}});
+            console.log("Customer:", customer);
+            
             if(!customer){
                 throw new NotFoundException("User not found!");
             }

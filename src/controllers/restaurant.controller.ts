@@ -23,7 +23,6 @@ export class RestaurantController {
     };
     
     @Get(":id")
-    // async findOne(@Param("id") id: number):
     async findOne(@Param("id") id: number):
     Promise<{message: string, restaurant: RestaurantDto}> {
         try {
@@ -39,7 +38,7 @@ export class RestaurantController {
     };
 
     @Post()
-    async create(restaurantDto: RestaurantDto):
+    async create(@Body() restaurantDto: RestaurantDto):
     Promise<{message: string, restaurant: RestaurantDto}>{
         try {
             const newRestaurant = await this.restaurantService.create(restaurantDto);

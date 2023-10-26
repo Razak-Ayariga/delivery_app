@@ -13,5 +13,5 @@ export default new DataSource({
   database: process.env.DB_NAME,
   entities: entities,
   synchronize: true,
-  logging: true
+  // logging: true
 });

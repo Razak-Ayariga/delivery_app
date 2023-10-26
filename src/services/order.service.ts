@@ -47,7 +47,7 @@ export class OrderService implements OrderInterface{
             const createOrder = await this.OrderRepository.save(order);
 
            let orderedMenu = [];
-           if(orderDto.ordered_menus.length > 0){
+           if(orderDto.ordered_menus){
             orderedMenu = await this.orderedMenuService.createMenuItems(
                 orderDto.ordered_menus, createOrder.id
             )

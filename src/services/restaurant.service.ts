@@ -38,7 +38,7 @@ export class RestaurantService implements RestaurantInterface {
     async create(restaurantDto: RestaurantDto): Promise<RestaurantDto> {
         try {
             const existingRestaurant: any = await this.restaurantRepository.findOne({where:{email:restaurantDto.email}});
-            if(!existingRestaurant){
+            if(existingRestaurant){
             throw new ConflictException("Restaurant already exist!");
             }
              const restaurant: any = this.restaurantRepository.create(restaurantDto);

@@ -47,7 +47,7 @@ export class CustomerController {
                 customer: customer
             }
           } catch (error) {
-        
+            throw error;
           }
     };
 
@@ -67,12 +67,12 @@ export class CustomerController {
 
      @Delete(":id")
      async delete(@Param() id: number):
-     Promise<{message: string, customer: CustomerDto}>{
+     Promise<{message: string}>{
         try {
            const deleteCustomer = await this.customerService.delete(id);
            return {
             message: "Successful",
-            customer: deleteCustomer
+            // customer: deleteCustomer
            } 
         } catch (error) {
             throw error;

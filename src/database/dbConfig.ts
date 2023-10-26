@@ -12,5 +12,5 @@ export const dbConnection: MysqlConnectionOptions = ({
     database: process.env.DB_NAME,
     entities: entities,
     synchronize: true,
-    logging: true
+    // logging: true
 });

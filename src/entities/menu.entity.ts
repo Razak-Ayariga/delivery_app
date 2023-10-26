@@ -2,6 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMan
 import { Restaurant } from "./restaurant.entity";
 import { OrderedMenu } from "./orderedMenu.entity";
 
+// Menu Entity
+
 @Entity()
 export class Menu {
   @PrimaryGeneratedColumn()
@@ -23,7 +25,7 @@ export class Menu {
   @JoinColumn({ name: "restaurant_id" })
   restaurant: Restaurant;
 
-  @OneToMany(() => Menu, menu => menu.orderedMenus) 
+  @OneToMany(() => OrderedMenu, orderedMenu => orderedMenu.menu) // Inverse relationship
   orderedMenus: OrderedMenu[];
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })

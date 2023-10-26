@@ -2,6 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinColu
 import { Order } from "./order.entity";
 import { Menu } from "./menu.entity";
 
+// OrderedMenu Entity
+
 @Entity()
 export class OrderedMenu {
   @PrimaryGeneratedColumn()
@@ -22,12 +24,13 @@ export class OrderedMenu {
   @Column()
   amount: number;
 
-  @ManyToOne(() => Menu)
-  @JoinColumn({name: "menu_id"})
+  @ManyToOne(() => Menu) 
+  @JoinColumn({ name: "menu_id" })
   menu: Menu;
 
-  @OneToMany(() => OrderedMenu, (orderedMenu) => orderedMenu.order)
-  order: Order[];
+  @ManyToOne(() => Order) 
+  @JoinColumn({ name: "order_id" })
+  order: Order;
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;

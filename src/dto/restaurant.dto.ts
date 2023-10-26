@@ -7,8 +7,10 @@ export class RestaurantDto {
     full_name: string;
     email: string;
     phone_number: number;
+    password: string;
 
     gps: string;
+    
     address: string;
 
     @IsDate()
