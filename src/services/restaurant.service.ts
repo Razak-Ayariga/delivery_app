@@ -4,11 +4,13 @@ import { Repository } from "typeorm";
 import { Restaurant } from "src/entities/restaurant.entity";
 import { RestaurantDto } from "src/dto/restaurant.dto";
 import { RestaurantInterface } from "src/interfaces/restaurant.interface";
+import { MenuService } from "./menu.service";
 
 @Injectable()
 export class RestaurantService implements RestaurantInterface {
     constructor(
         @InjectRepository(Restaurant) private restaurantRepository: Repository<RestaurantDto>,
+        private readonly menuService: MenuService
     ) {}
 
     async findAll(): Promise<RestaurantDto[]> {
@@ -16,6 +18,10 @@ export class RestaurantService implements RestaurantInterface {
             const restaurants: any = await this.restaurantRepository.find();
             if(!restaurants){
                 throw new NotFoundException("no restaurant found!");
+            }
+
+            for(const restaurant of restaurants){
+                restaurant.menu = await this.menuService.findAllMenu(restaurant.id);
             }
             return restaurants;
         } catch (error) {
@@ -29,6 +35,7 @@ export class RestaurantService implements RestaurantInterface {
         if(!restaurant){
             throw new NotFoundException;
         }
+        restaurant.menu = await this.menuService.findAllMenu(restaurant.id);
         return restaurant;
        } catch (error) {
         throw error;

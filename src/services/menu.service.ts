@@ -72,4 +72,14 @@ export class MenuService implements MenuInterface {
             
         }
     };
+
+    //find menu by restaurant_id
+    async findAllMenu(restaurant_id: number): Promise<MenuDto[]>{
+        try {
+            const restaurantMenu = await this.MenuRepository.find({where:{restaurant_id}});
+            return restaurantMenu;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

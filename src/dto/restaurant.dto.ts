@@ -1,4 +1,5 @@
 import { IsDate, IsNotEmpty } from "class-validator";
+import { MenuDto } from "./menu.dto";
 
 export class RestaurantDto {
     id: number;
@@ -17,5 +18,7 @@ export class RestaurantDto {
     created_at: Date;
     updated_at: Date;
     deleted_at: Date;
+
+    menu: MenuDto[];
 
 }
