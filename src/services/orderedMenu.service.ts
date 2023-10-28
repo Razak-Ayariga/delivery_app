@@ -73,9 +73,9 @@ export class OrderedMenuService implements OrderedMenuInterface {
       if (!existingOrderedMenu) {
         throw new NotFoundException('No record found!');
       }
-      const deletedResults = 
+      const deletedResults: any = 
       await this.orderedMenuRepository.remove(existingOrderedMenu);
-      return deletedResults[0];
+      return deletedResults;
     } catch (error) {
         throw error;
     }
@@ -105,5 +105,30 @@ export class OrderedMenuService implements OrderedMenuInterface {
       throw error;
     }
   };
+
+  async updateOrderedMenu(
+    orderedMenu: OrderedMenuDto[],
+    order_id: number
+    ): Promise<OrderedMenuDto[]>{
+      try {
+        const updateMenu: OrderedMenuDto[]=[];
+        for(const menu of orderedMenu){
+          if(!menu.id){
+            menu.order_id = order_id;
+            const addNewMenu = await this.create(menu);
+            updateMenu.push(addNewMenu);
+          }else{
+            const orderMenu = await this.orderedMenuRepository.findOne({
+              where: {id: menu.id, order_id}
+            });
+            const updatedOrderMenu = await this.update(orderMenu, menu.id);
+            updateMenu.push(updatedOrderMenu);
+          }
+        }
+        return updateMenu;
+      } catch (error) {
+        return error;
+      }
+    }
 
 }

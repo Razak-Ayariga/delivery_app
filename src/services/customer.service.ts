@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { CustomerInterface } from "src/interfaces/customer.interface";
 import { Customer } from "src/entities/customer.entity";
 import { CustomerDto } from "src/dto/customer.dto";
+import {hash} from "bcryptjs";
 
 @Injectable()
 export class CustomerService implements CustomerInterface {
@@ -36,6 +37,10 @@ export class CustomerService implements CustomerInterface {
             if(existingCustomer){
                 throw new ConflictException(" User already exists");
             }
+            if(customerDto.password){
+                const hashPassword = await hash(customerDto.password, 10);
+                customerDto.password = hashPassword;
+            }
             const customer: any = this.customerRepository.create(customerDto);
             await this.customerRepository.save(customer);
             return customer;
@@ -62,16 +67,18 @@ export class CustomerService implements CustomerInterface {
     async delete(id: number): Promise<CustomerDto> {
         try {
             const customer: any = await this.customerRepository.findOne({where: {id}});
-            console.log("Customer:", customer);
-            
             if(!customer){
                 throw new NotFoundException("User not found!");
             }
-            const deleteCustomer = await this.customerRepository.remove(customer);
-            return deleteCustomer[0];
+            const deleteCustomer: any = await this.customerRepository.remove(customer);
+            return deleteCustomer;
         } catch (error) {
            throw error; 
         }
+    };
+
+    async findByEmail(email: string): Promise<CustomerDto>{
+        return this.customerRepository.findOne({where:{email}});
     }
 
 }

@@ -5,6 +5,7 @@ import { Restaurant } from "src/entities/restaurant.entity";
 import { RestaurantDto } from "src/dto/restaurant.dto";
 import { RestaurantInterface } from "src/interfaces/restaurant.interface";
 import { MenuService } from "./menu.service";
+import {hash} from "bcryptjs";
 
 @Injectable()
 export class RestaurantService implements RestaurantInterface {
@@ -48,6 +49,8 @@ export class RestaurantService implements RestaurantInterface {
             if(existingRestaurant){
             throw new ConflictException("Restaurant already exist!");
             }
+            const hashPassword = await hash(restaurantDto.password, 10);
+            restaurantDto.password = hashPassword;
              const restaurant: any = this.restaurantRepository.create(restaurantDto);
              await this.restaurantRepository.save(restaurant);
              return restaurant;
@@ -81,5 +84,9 @@ export class RestaurantService implements RestaurantInterface {
         } catch (error) {
             throw error;
         }
+    };
+
+    async findByEmail(email: string): Promise<RestaurantDto>{
+        return this.restaurantRepository.findOne({where:{email}});
     }
 }

@@ -5,6 +5,7 @@ import { Order } from "src/entities/order.entity";
 import { OrderDto } from "src/dto/order.dto";
 import { OrderInterface } from "src/interfaces/order.interface";
 import { OrderedMenuService } from "./orderedMenu.service";
+import { OrderedMenuDto } from "src/dto/orderedMenu.dto";
 
 @Injectable()
 export class OrderService implements OrderInterface{
@@ -66,9 +67,17 @@ export class OrderService implements OrderInterface{
             if(!existingOrder){
                 throw new NotFoundException("Order not found!");
             }
-            const updateOrder = this.orderRepository.merge(existingOrder, orderDto)
-            const updatedOrder = await this.orderRepository.save(updateOrder)
-            return updateOrder[0];
+
+            let updatedOrderedMenu: OrderedMenuDto[] = orderDto.ordered_menus;
+            if(updatedOrderedMenu){
+                updatedOrderedMenu = await this.orderedMenuService.updateOrderedMenu(
+                   updatedOrderedMenu, id 
+                );
+            }
+            const newOrder = this.orderRepository.merge(existingOrder, orderDto)
+            const updatedOrder: any = await this.orderRepository.save(newOrder);
+            updatedOrder.ordered_menus = updatedOrderedMenu;
+            return updatedOrder;
         } catch (error) {
             throw error;
         }
@@ -80,8 +89,8 @@ export class OrderService implements OrderInterface{
             if(!order){
               throw new NotFoundException("Order not found!");
             }
-            const deletedOrder = await this.orderRepository.remove(order)
-            return;
+            const deletedOrder:any = await this.orderRepository.remove(order)
+            return deletedOrder;
         } catch (error) {
             throw error;
         }

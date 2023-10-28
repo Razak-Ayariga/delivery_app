@@ -66,8 +66,8 @@ export class MenuService implements MenuInterface {
             if(!existingMenu){
                 throw new NotFoundException("Menu not found!");
             }
-            const deleteMenu = await this.MenuRepository.remove(existingMenu);
-            return deleteMenu[0];
+            const deleteMenu: any = await this.MenuRepository.remove(existingMenu);
+            return deleteMenu;
         } catch (error) {
             
         }
