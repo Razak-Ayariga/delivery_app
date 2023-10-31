@@ -8,6 +8,9 @@ export class Order {
   id: number;
 
   @Column()
+  order_code: string;
+
+  @Column()
   customer_id: number;
 
   @Column()
@@ -15,6 +18,9 @@ export class Order {
 
   @Column()
   delivery_point: string;
+
+  @Column()
+  total_amount: string;
 
   @Column()
   status: string;

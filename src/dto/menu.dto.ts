@@ -5,6 +5,7 @@ export class MenuDto {
 
     @IsNotEmpty()
     restaurant_id: number;
+    photo: string;
     name: string;
     price: number;
     

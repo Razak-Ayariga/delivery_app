@@ -14,6 +14,30 @@ export class OrderService implements OrderInterface{
         private readonly orderedMenuService: OrderedMenuService
     ){}
 
+    //Helper method to generate the next order_code
+    async generateNextOrderCode(): Promise<string> {
+        try {
+          const latestOrder = await this.orderRepository
+            .createQueryBuilder('order')
+            .orderBy('order.created_at', 'DESC')
+            .getOne();
+      
+          if (latestOrder) {
+            const latestOrderCode = latestOrder.order_code;
+           const nextOrderCode = parseInt(latestOrderCode, 10) + 1;
+           return nextOrderCode.toString().padStart(8, "0")
+          }else{
+            return "00000001";
+          }
+      
+        } catch (error) {
+          throw error;
+        }
+      }
+      
+     
+      
+
     async findAll(): Promise<OrderDto[]> {
         try {
             const orders: any = await this.orderRepository.find();
@@ -44,8 +68,15 @@ export class OrderService implements OrderInterface{
 
     async create(orderDto: OrderDto): Promise<OrderDto> {
        try {
-           const order: any = this.orderRepository.create(orderDto);
-            const createOrder = await this.orderRepository.save(order);
+           const order = new OrderDto();
+           order.restaurant_id = orderDto.restaurant_id;
+           order.customer_id = orderDto.customer_id;
+           order.delivery_point = orderDto.delivery_point;
+           order.status = orderDto.status;
+           order.total_amount = orderDto.total_amount;
+           order.order_code = await this.generateNextOrderCode();
+           const newOrder: any = await this.orderRepository.create(order);
+            const createOrder: any = await this.orderRepository.save(newOrder);
 
            let orderedMenu = [];
            if(orderDto.ordered_menus){

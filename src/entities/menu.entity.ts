@@ -16,6 +16,9 @@ export class Menu {
   name: string;
 
   @Column()
+  photo: string;
+
+  @Column()
   description: string;
 
   @Column()
